@@ -4,16 +4,13 @@ from pydantic import BaseSettings, SecretStr, validator, BaseModel
 
 
 class Settings(BaseSettings):
-    bot_token: Optional[str]
+    bot_token: str
 
-    DATABASE_DNS: Optional[str] = "sqlite://db.sqlite"
+    base_url: str
 
-    #
-    # @validator("fsm_mode")
-    # def fsm_type_check(cls, v):
-    #     if v not in ("memory", "redis"):
-    #         raise ValueError("Incorrect fsm_mode. Must be one of: memory, redis")
-    #     return v
+    database_dns: Optional[str] = "sqlite://db.sqlite"
+
+
 
     class Config:
         env_file = '.env'

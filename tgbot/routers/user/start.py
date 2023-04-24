@@ -3,10 +3,12 @@ from aiogram.types import Message
 from fluentogram import TranslatorRunner
 
 from models import UserModel
+
+import tgbot.keyboards as keyboards
+
 from . import router
 
 
 @router.message(CommandStart())
 async def fun(message: Message, user: UserModel, i18n: TranslatorRunner):
-    print(message)
-    await message.reply("Вітаю!")
+    await message.reply("Вітаю!", reply_markup=await keyboards.test())
