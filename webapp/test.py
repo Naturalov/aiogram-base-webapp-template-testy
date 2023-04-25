@@ -7,12 +7,11 @@ from .api import api_app
 from .app import routes
 
 app = Application()
-app["bot"] = bot
 
 app.add_subapp("/api", api_app)
 app.add_routes(routes)
-# Подключение глобального маршрутизатора к приложению
 
+# Настройка вебхука
 SimpleRequestHandler(
     dispatcher=dp,
     bot=bot,

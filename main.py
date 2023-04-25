@@ -40,15 +40,14 @@ logging.getLogger('aiohttp.access').setLevel(logging.INFO)
 
 async def on_startup(bot: Bot, config: Settings):
     await bot.set_webhook(f"{config.base_url}/webhook")
-    print(await bot.get_webhook_info())
-    logging.info("Setted webhook")
+    webhook = await bot.get_webhook_info()
+    logging.info(f"Configured webhook {webhook.url} on ip {webhook.ip_address}")
     user: User = await bot.me()
     logging.info(
         "Run server for bot @%s id=%d - %r", user.username, bot.id, user.full_name
     )
     # Регистрация /-команд в интерфейсе.
     await set_bot_commands(bot)
-
 
     await Tortoise.init({
         'connections': {
@@ -63,7 +62,9 @@ async def on_startup(bot: Bot, config: Settings):
     })
     await Tortoise.generate_schemas()
 
+
 dp.startup.register(on_startup)
+
 
 def main():
     from tgbot import dp
