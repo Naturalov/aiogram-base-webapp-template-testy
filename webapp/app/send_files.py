@@ -11,10 +11,7 @@ import pathlib
 
 @routes.get('/')
 async def index(request: Request):
-    file_path = pathlib.Path(__file__).parent / "../template/demo.html"
+    file_path = pathlib.Path(__file__).parent / "../static/index.html"
     return web.FileResponse(file_path)
 
-# @routes.static('/')
-# async def static(request: Request):
-#     file_path = pathlib.Path(__file__).parent / "../react_build" / request.match_info['filename']
-#     return web.FileResponse(file_path)
+routes.static('/', path = pathlib.Path(__file__).parent / "../static/")

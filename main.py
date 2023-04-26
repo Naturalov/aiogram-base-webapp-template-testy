@@ -38,7 +38,7 @@ logging.getLogger('aiogram.event').setLevel(logging.WARNING)
 logging.getLogger('aiohttp.access').setLevel(logging.INFO)
 
 
-async def on_startup(bot: Bot, config: Settings):
+async def on_startup(app):
     await bot.set_webhook(f"{config.base_url}/webhook")
     webhook = await bot.get_webhook_info()
     logging.info(f"Configured webhook {webhook.url} on ip {webhook.ip_address}")
@@ -62,15 +62,23 @@ async def on_startup(bot: Bot, config: Settings):
     })
     await Tortoise.generate_schemas()
 
+async def on_shutdown(app):
+    await Tortoise.close_connections()
+    await bot.delete_webhook()
+    await bot.close()
+    logging.info(
+        "Good bye"
+    )
 
-dp.startup.register(on_startup)
 
 
 def main():
     from tgbot import dp
     from webapp import app
-    setup_application(app, dp, bot=bot)
-    run_app(app, host="0.0.0.0", port=80, access_log=logger)
+    from aiohttp import web
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+    web.run_app(app, host='0.0.0.0', port=8080)
 
 
 if __name__ == '__main__':
